@@ -75,7 +75,7 @@ internal class ProgressHomePage : ProgressBasePage
         actions.MoveToElement(nav_MenuBar_Company_option).Perform();
     }
 
-        public void HoverSearhIconMenuBarOption()
+    public void HoverSearhIconMenuBarOption()
     {
         Actions actions = new Actions(_driver);
         actions.MoveToElement(nav_Menubar_SearhIcon).Perform();

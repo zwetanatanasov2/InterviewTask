@@ -1,21 +1,23 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 internal class ProgressContactUsPage : ProgressBasePage
 {
     //List with locators for some of the page elements
-    private IWebElement pageTitle => _driver.FindElement(By.XPath("//*[@id='Content_C036_Col00']/h1[text()='How Can We Help?']"));
+    private IWebElement pageTitle => _driver.FindElement(By.XPath("//*[@id='Content_T9E42D5B1001_Col00']//span[text()='Contact Us']"));
     private IWebElement getInTouchSection => _driver.FindElement(By.Id("form--1"));
-    private IWebElement productInterestDropDown => _driver.FindElement(By.Id("Dropdown-1"));
     private IWebElement businessEmailField => _driver.FindElement(By.Id("Email-1"));
     private IWebElement firstNameField => _driver.FindElement(By.Id("Textbox-1"));
     private IWebElement lastNameField => _driver.FindElement(By.Id("Textbox-2"));
     private IWebElement companyField => _driver.FindElement(By.Id("Textbox-3"));
+    private IWebElement productInterestDropDown => _driver.FindElement(By.Id("Dropdown-1"));
     private IWebElement iAmDropDown => _driver.FindElement(By.Id("Dropdown-2"));
     private IWebElement countryTerritoryDropDown => _driver.FindElement(By.Id("Country-1"));
+    private IWebElement stateDropDown => _driver.FindElement(By.Id("State-1"));
+    private IWebElement industryDropDown => _driver.FindElement(By.Id("TaxonomiesListField-1"));
     private IWebElement phoneField => _driver.FindElement(By.Id("Textbox-5"));
     private IWebElement messageField => _driver.FindElement(By.Id("Textarea-1"));
     private IWebElement contactSalesButton => _driver.FindElement(By.XPath("//*[@id='form--1']//button"));
-    private IWebElement stateDropDown => _driver.FindElement(By.Id("State-1"));
     private IWebElement privacyPolicyEuropeLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[1]/label[1]/p/a"));
     private IWebElement privacyPolicyNortAmericaLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[2]/label/p/a[2]"));
     private IWebElement partnersEuropeLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[2]/label/p/a[1]"));
@@ -36,6 +38,41 @@ internal class ProgressContactUsPage : ProgressBasePage
     {
         base.Close();
     }
+
+    // List of bool objects about page elements.
+    public bool ContactUsPageIsDisplayed => pageTitle.Displayed;
+
+    public bool GetInTouchSectionIsDisplayed => getInTouchSection.Displayed;
+
+    public bool IndustryDropDown => industryDropDown.Displayed;
+
+    public bool StateDropDown => stateDropDown.Displayed;
+
+    public bool PartnersEuropeLinkIsDisplayed => partnersEuropeLink.Displayed;
+
+    public bool PartnersNothAmericaLinkIsDisplayed => partnersNortAmericaLink.Displayed;
+
+    public bool PrivacyPolicyEuropeLinkIsDispalyed => privacyPolicyEuropeLink.Displayed;
+
+    public bool PrivacyPolicyNortAmericaLinkIsDisplayed => privacyPolicyNortAmericaLink.Displayed;
+
+    // List of selected elements.
+    private SelectElement selectedPdoructDropDown;
+    public SelectElement SelectedPdoructDropDown => selectedPdoructDropDown = new SelectElement(productInterestDropDown);
+
+    private SelectElement selectedCountryDropDown;
+    public SelectElement SelectedCountryDropDown => selectedCountryDropDown = new SelectElement(countryTerritoryDropDown);
+
+    private SelectElement selectediAmDropDown;
+    public SelectElement SelectediAmDropDown => selectediAmDropDown = new SelectElement(iAmDropDown);
+
+    private SelectElement selectedStateDropDown;
+    public SelectElement SelectedStateDropDown => selectedStateDropDown = new SelectElement(stateDropDown);
+
+    private SelectElement selectedIndustryDropDown;
+    public SelectElement SelectedIndustryDropDown => selectedIndustryDropDown = new SelectElement(industryDropDown);
+
+    // Methods to click page elements.
     public void ClikContactSalesButton()
     {
         contactSalesButton.Click();
@@ -59,6 +96,11 @@ internal class ProgressContactUsPage : ProgressBasePage
     public void ClickStateDropDown()
     {
         stateDropDown.Click();
+    }
+
+    public void ClickIndustryDropDown()
+    {
+        industryDropDown.Click();
     }
 
     public void ClickPrivasyPolicyEropeLink()
@@ -86,6 +128,7 @@ internal class ProgressContactUsPage : ProgressBasePage
         agreeNotificationsCheckbox.Click();
     }
 
+    // Methods to populate text fields on the page
     public void PopulateFirstName(string firstname)
     {
         if (!string.IsNullOrEmpty(firstname))
@@ -157,7 +200,8 @@ internal class ProgressContactUsPage : ProgressBasePage
             throw new ArgumentException("message is null or empty.");
         }
     }
-    // Not good solution about the next four methods! Another approach is needed here.
+    // Methods to select an option form a drop down by value.
+    // Not good solution about the next five methods! Another approach is needed here.
     public void SelectValueProductDropDown(string option)
     {
         ClickProductDropDown();
@@ -184,5 +228,12 @@ internal class ProgressContactUsPage : ProgressBasePage
         ClickStateDropDown();
         IWebElement StateOption = _driver.FindElement(By.XPath($"//*[@id='State-1']/option[text()='{option}']"));
         StateOption.Click();
+    }
+
+        public void SelectValueIndustryDropDown(string option)
+    {
+        ClickIndustryDropDown();
+        IWebElement IndustryOption = _driver.FindElement(By.XPath($"//*[@id='TaxonomiesListField-1']/option[text()='{option}']"));
+        IndustryOption.Click();
     }
 }
