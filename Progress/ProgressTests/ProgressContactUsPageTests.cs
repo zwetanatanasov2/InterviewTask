@@ -33,22 +33,41 @@ class ProgressContactUsPageTests
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
         ProgressContactUsPage.LoadPage(ContactUsPageURL);
-        Assert.That(ProgressContactUsPage.GetInTouchSectionIsDisplayed);
+        ClassicAssert.IsTrue(ProgressContactUsPage.GetInTouchSectionIsDisplayed);
     }
 
     [Test]
     public void Test_ProductDropDownDefaultValueIsDisplayedOnOpen()
     {
-        string DefaultValueProductDropdown = "Select product";
+        // Default Value Product Dropdown = "Select product";
 
         var ProgressContactUsPage = new ProgressContactUsPage(driver);
 
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
         ProgressContactUsPage.LoadPage(ContactUsPageURL);
-        var productDropDown = ProgressContactUsPage.SelectedPdoructDropDown;
-        IWebElement selectedOption = productDropDown.SelectedOption;
-        ClassicAssert.AreEqual(DefaultValueProductDropdown, selectedOption, "The product dropdown default value doesn't match");
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsProductInterestDropDownEmpty());
+    }
+
+    [Test]
+    public void Test_AllRequeredFieldsValidation()
+    {
+        var ProgressContactUsPage = new ProgressContactUsPage(driver);
+
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+
+        ProgressContactUsPage.LoadPage(ContactUsPageURL);
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsProductInterestDropDownEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsBusinessEmailFIledEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsFirstNameFieldEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsLastNameFieldEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsCompanyFieldEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsiAmDropDownEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsCountryTerritoryDropDownEmpty());
+        ClassicAssert.IsTrue(ProgressContactUsPage.IsPhoneFieldEmpty());
+        ProgressContactUsPage.ClikContactSalesButton();
+        
+        
     }
 
     [TearDown]

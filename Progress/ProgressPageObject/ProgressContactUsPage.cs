@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-internal class ProgressContactUsPage : ProgressBasePage
+internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(driver)
 {
     //List with locators for some of the page elements
     private IWebElement pageTitle => _driver.FindElement(By.XPath("//*[@id='Content_T9E42D5B1001_Col00']//span[text()='Contact Us']"));
@@ -23,10 +23,6 @@ internal class ProgressContactUsPage : ProgressBasePage
     private IWebElement partnersEuropeLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[2]/label/p/a[1]"));
     private IWebElement partnersNortAmericaLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[1]/label[2]/p/a[1]"));
     private IWebElement agreeNotificationsCheckbox => _driver.FindElement(By.CssSelector("input.js-i-agree-checkbox"));
-
-    public ProgressContactUsPage(IWebDriver driver) : base(driver)
-    {
-    }
 
     public override void LoadPage(string url)
     {
@@ -230,10 +226,60 @@ internal class ProgressContactUsPage : ProgressBasePage
         StateOption.Click();
     }
 
-        public void SelectValueIndustryDropDown(string option)
+    public void SelectValueIndustryDropDown(string option)
     {
         ClickIndustryDropDown();
         IWebElement IndustryOption = _driver.FindElement(By.XPath($"//*[@id='TaxonomiesListField-1']/option[text()='{option}']"));
         IndustryOption.Click();
+    }
+
+    // Methods to check the fields are empty and dropdowsn have default value.
+    public bool IsFieldEmpty(IWebElement field)
+    {
+        return string.IsNullOrEmpty(field.GetAttribute("value"));
+    }
+
+    public bool IsFirstNameFieldEmpty()
+    {
+        return IsFieldEmpty(firstNameField);
+    }
+
+    public bool IsBusinessEmailFIledEmpty()
+    {
+        return IsFieldEmpty(businessEmailField);
+    }
+    public bool IsLastNameFieldEmpty()
+    {
+        return IsFieldEmpty(lastNameField);
+    }
+
+    public bool IsCompanyFieldEmpty()
+    {
+        return IsFieldEmpty(companyField);
+    }
+
+    public bool IsPhoneFieldEmpty()
+    {
+        return IsFieldEmpty(phoneField);
+    }
+
+    public bool IsProductInterestDropDownEmpty()
+    {
+        return SelectedPdoructDropDown.SelectedOption.Text == "Select product";
+    }
+
+    public bool IsCountryTerritoryDropDownEmpty()
+    {
+        return SelectedCountryDropDown.SelectedOption.Text == "Select country/territory";
+    }
+
+    public bool IsiAmDropDownEmpty()
+    {
+        return SelectediAmDropDown.SelectedOption.Text == "Select company type";
+    }
+
+    public bool IsStateDropDownEmpty()
+    {
+        return SelectedStateDropDown.SelectedOption.Text == "Select:";
     }
 }
