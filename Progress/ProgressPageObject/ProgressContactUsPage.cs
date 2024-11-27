@@ -23,6 +23,8 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
     private IWebElement partnersEuropeLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[2]/label/p/a[1]"));
     private IWebElement partnersNortAmericaLink => _driver.FindElement(By.XPath("//*[@id='form--1']/form/div/div[6]/div[1]/label[2]/p/a[1]"));
     private IWebElement agreeNotificationsCheckbox => _driver.FindElement(By.CssSelector("input.js-i-agree-checkbox"));
+    private IWebElement validationMessageFirstNameField => _driver.FindElement(By.XPath("//*[@id='C024_Col00']/div/p"));
+    private IWebElement validationMessageEmailField => _driver.FindElement(By.XPath("//*[@id='C023_Col01']/div/p"));
 
     public override void LoadPage(string url)
     {
@@ -36,21 +38,25 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
     }
 
     // List of bool objects about page elements.
-    public bool ContactUsPageIsDisplayed => pageTitle.Displayed;
+    public bool IsDisplayedContactUsPage => pageTitle.Displayed;
 
-    public bool GetInTouchSectionIsDisplayed => getInTouchSection.Displayed;
+    public bool IsDisplayedGetInTouchSection => getInTouchSection.Displayed;
 
-    public bool IndustryDropDown => industryDropDown.Displayed;
+    public bool IsDisplayedIndustryDropDown => industryDropDown.Displayed;
 
-    public bool StateDropDown => stateDropDown.Displayed;
+    public bool IsDisplayedStateDropDown => stateDropDown.Displayed;
 
-    public bool PartnersEuropeLinkIsDisplayed => partnersEuropeLink.Displayed;
+    public bool IsDisplayedPartnersEuropeLink => partnersEuropeLink.Displayed;
 
-    public bool PartnersNothAmericaLinkIsDisplayed => partnersNortAmericaLink.Displayed;
+    public bool IsDisplayedPartnersNothAmericaLink => partnersNortAmericaLink.Displayed;
 
-    public bool PrivacyPolicyEuropeLinkIsDispalyed => privacyPolicyEuropeLink.Displayed;
+    public bool IsDispalyedPrivacyPolicyEuropeLink => privacyPolicyEuropeLink.Displayed;
 
-    public bool PrivacyPolicyNortAmericaLinkIsDisplayed => privacyPolicyNortAmericaLink.Displayed;
+    public bool IsDisplayedPrivacyPolicyNortAmericaLink => privacyPolicyNortAmericaLink.Displayed;
+
+    public bool IsDisplayedValidationMessageFirstNameField => validationMessageFirstNameField.Displayed;
+
+    public bool IsDisplayedValidationMessageEmailFiled => validationMessageEmailField.Displayed;
 
     // List of selected elements.
     private SelectElement selectedPdoructDropDown;
@@ -67,6 +73,9 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
 
     private SelectElement selectedIndustryDropDown;
     public SelectElement SelectedIndustryDropDown => selectedIndustryDropDown = new SelectElement(industryDropDown);
+
+    private SelectElement selectedPhoneField;
+    public SelectElement SelectedPhoneField => selectedPhoneField = new SelectElement(phoneField);
 
     // Methods to click page elements.
     public void ClikContactSalesButton()
@@ -196,44 +205,38 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
             throw new ArgumentException("message is null or empty.");
         }
     }
-    // Methods to select an option form a drop down by value.
-    // Not good solution about the next five methods! Another approach is needed here.
+    // Methods to select an option from a drop down by value.
     public void SelectValueProductDropDown(string option)
     {
-        ClickProductDropDown();
-        IWebElement productOption = _driver.FindElement(By.XPath($"//*[@id='Dropdown-1']/option[text()='{option}']"));
-        productOption.Click();
+        var selectedProductOption = new SelectElement(productInterestDropDown);
+        selectedProductOption.SelectByText(option);
     }
 
     public void SelectValueCountryDropDown(string option)
     {
-        ClickCountryDropDown();
-        IWebElement countryOption = _driver.FindElement(By.XPath($"//*[@id='Country-1']/option[text()='{option}']"));
-        countryOption.Click();
+        var selectCountryOption = new SelectElement(countryTerritoryDropDown);
+        selectCountryOption.SelectByText(option);
     }
 
     public void SelectValueIAmDropDown(string option)
     {
-        ClickIAmDropDown();
-        IWebElement iAmOption = _driver.FindElement(By.XPath($"//*[@id='Dropdown-2']/option[text()='{option}']"));
-        iAmOption.Click();
+        var selectedIAmOption = new SelectElement(iAmDropDown);
+        selectedIAmOption.SelectByText(option);
     }
 
     public void SelectValueStateDropDown(string option)
     {
-        ClickStateDropDown();
-        IWebElement StateOption = _driver.FindElement(By.XPath($"//*[@id='State-1']/option[text()='{option}']"));
-        StateOption.Click();
+        var selectedStateOption = new SelectElement(stateDropDown);
+        selectedStateOption.SelectByText(option);
     }
 
     public void SelectValueIndustryDropDown(string option)
     {
-        ClickIndustryDropDown();
-        IWebElement IndustryOption = _driver.FindElement(By.XPath($"//*[@id='TaxonomiesListField-1']/option[text()='{option}']"));
-        IndustryOption.Click();
+        var selectedIndustryOption = new SelectElement(industryDropDown);
+        selectedIndustryOption.SelectByText(option);
     }
 
-    // Methods to check the fields are empty and dropdowsn have default value.
+    // Methods to check the fields are empty and dropdown have default value.
     public bool IsFieldEmpty(IWebElement field)
     {
         return string.IsNullOrEmpty(field.GetAttribute("value"));
@@ -281,5 +284,30 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
     public bool IsStateDropDownEmpty()
     {
         return SelectedStateDropDown.SelectedOption.Text == "Select:";
+    }
+
+    // Methods to return the value form an element.
+    public string TakeValueFirstNameField()
+    {
+        string firstNameFieldValue = firstNameField.Text;
+        return firstNameFieldValue;
+    }
+
+    public string TakeValueLastNameField()
+    {
+        string lastNameFieldValue = lastNameField.Text;
+        return lastNameFieldValue;
+    }
+
+    public string TakeValuePhoneField()
+    {
+        string phoneFieldValue = phoneField.Text;
+        return phoneFieldValue;
+    }
+
+    public string TakeValueValidationMessageEmailFied()
+    {
+        string validationMessageText = validationMessageEmailField.Text;
+        return validationMessageText;
     }
 }
