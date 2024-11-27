@@ -178,6 +178,22 @@ class ProgressContactUsPageTests
         ClassicAssert.AreEqual(thankYouPageURL, reidrectedPageURL, "The page URL does not match");
     }
 
+    [Test]
+    public void Test_ValidateMessageFieldCounter()
+    {
+        int defaultCounterNumber = 2000;
+        int stringLength = 15;
+        var stringGenerator = new ProgressGenerateRandomString();
+        var progressContactUsPage = new ProgressContactUsPage(driver);
+        string randomString = stringGenerator.GenerateRandomString(stringLength);
+
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+
+        progressContactUsPage.PopulateMessage(randomString);
+        int currentCounterValue = Int32.Parse(progressContactUsPage.TakeValueMessageFieldCounter());
+        ClassicAssert.AreEqual(defaultCounterNumber-stringLength, currentCounterValue);
+    }
+
     [TearDown]
     public void EndTest()
     {

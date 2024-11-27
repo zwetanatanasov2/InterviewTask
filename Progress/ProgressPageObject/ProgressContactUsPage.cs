@@ -25,6 +25,7 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
     private IWebElement agreeNotificationsCheckbox => _driver.FindElement(By.CssSelector("input.js-i-agree-checkbox"));
     private IWebElement validationMessageFirstNameField => _driver.FindElement(By.XPath("//*[@id='C024_Col00']/div/p"));
     private IWebElement validationMessageEmailField => _driver.FindElement(By.XPath("//*[@id='C023_Col01']/div/p"));
+    private IWebElement counterMessageFiled => _driver.FindElement(By.XPath("//*[@id='C026_Col01']/div/div/div/span[2]"));
 
     public override void LoadPage(string url)
     {
@@ -57,6 +58,8 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
     public bool IsDisplayedValidationMessageFirstNameField => validationMessageFirstNameField.Displayed;
 
     public bool IsDisplayedValidationMessageEmailFiled => validationMessageEmailField.Displayed;
+
+    public bool IsDisplayedCounterMessageFiled => counterMessageFiled.Displayed;
 
     // List of selected elements.
     private SelectElement selectedPdoructDropDown;
@@ -309,5 +312,11 @@ internal class ProgressContactUsPage(IWebDriver driver) : ProgressBasePage(drive
     {
         string validationMessageText = validationMessageEmailField.Text;
         return validationMessageText;
+    }
+
+    public string TakeValueMessageFieldCounter()
+    {
+        string counterValue = counterMessageFiled.Text;
+        return counterValue;
     }
 }
