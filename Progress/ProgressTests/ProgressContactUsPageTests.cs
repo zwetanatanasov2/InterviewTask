@@ -5,59 +5,61 @@ using OpenQA.Selenium.Support.UI;
 
 class ProgressContactUsPageTests
 {
-    ChromeDriver driver;
-    string ContactUsPageURL = "https://www.progress.com/company/contact";
+    private ChromeDriver driver;
+    private readonly string contactUsPageURL = "https://www.progress.com/company/contact";
+    private ProgressContactUsPage contactUsPage;
+    private ProgressGenerateRandomString stringGenerator = new ProgressGenerateRandomString();
 
     [SetUp]
     public void Initialize()
     {
         driver = new ChromeDriver();
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
-        ProgressContactUsPage.LoadPage(ContactUsPageURL);
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+        contactUsPage = new ProgressContactUsPage(driver); 
+        contactUsPage.LoadPage(contactUsPageURL);
+    }
+
+    [TearDown]
+    public void EndTest()
+    {
+        ProgressTakeScreenShot screenShotHelper = new ProgressTakeScreenShot(driver);
+        var CurrentContext = NUnit.Framework.TestContext.CurrentContext;
+        if (CurrentContext.Result.Outcome != NUnit.Framework.Interfaces.ResultState.Success)
+        {
+            string testName = CurrentContext.Test.Name;
+            screenShotHelper.TakeScreenshot(testName);
+        }
+
+        driver.Quit();
     }
 
     [Test]
     public void Test_ContactUsPageIsDisplayed()
     {
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
-
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        Assert.That(ProgressContactUsPage.IsDisplayedContactUsPage);
+        Assert.That(contactUsPage.IsDisplayedContactUsPage);
     }
 
     [Test]
     public void Test_GetInTouchSectionIsDisplayed()
     {
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
-
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsDisplayedGetInTouchSection);
+        ClassicAssert.IsTrue(contactUsPage.IsDisplayedGetInTouchSection);
     }
 
     [Test]
     public void Test_ProductDropdownDefaultValueDisplayedOnOpen()
     {
         // Default Value Product Dropdown = "Select product";
-
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
-
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsProductInterestDropDownEmpty());
+        ClassicAssert.IsTrue(contactUsPage.IsProductInterestDropDownEmpty());
     }
 
     [Test]
     public void Test_StateDropdowDisplayedIfUSACountrySelected()
     {
         string countryToSelect = "USA";
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        ProgressContactUsPage.SelectValueCountryDropDown(countryToSelect);
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsDisplayedStateDropDown);
+        contactUsPage.SelectValueCountryDropDown(countryToSelect);
+        ClassicAssert.IsTrue(contactUsPage.IsDisplayedStateDropDown);
     }
 
     [Test]
@@ -65,14 +67,12 @@ class ProgressContactUsPageTests
     {
         string countryToSelect = "Germany";
         string privacyPolicyURL = "https://www.progress.com/legal/privacy-policy";
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
 
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
         string originalWindow = driver.CurrentWindowHandle;
-        ProgressContactUsPage.SelectValueCountryDropDown(countryToSelect);
-        ProgressContactUsPage.ClickPrivasyPolicyEropeLink();
+        contactUsPage.SelectValueCountryDropDown(countryToSelect);
+        contactUsPage.ClickPrivasyPolicyEropeLink();
         wait.Until(driver => driver.WindowHandles.Count > 1);
         foreach (string window in driver.WindowHandles)
         {
@@ -92,13 +92,10 @@ class ProgressContactUsPageTests
     {
         string countryToSelect = "Bulgaria";
         string bulgariaPhoneCode = "+359";
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsPhoneFieldEmpty());
-        ProgressContactUsPage.SelectValueCountryDropDown(countryToSelect);
-        string prepopulatePhoneCode = ProgressContactUsPage.TakeValuePhoneField();
+        ClassicAssert.IsTrue(contactUsPage.IsPhoneFieldEmpty());
+        contactUsPage.SelectValueCountryDropDown(countryToSelect);
+        string prepopulatePhoneCode = contactUsPage.TakeValuePhoneField();
         ClassicAssert.AreEqual(prepopulatePhoneCode, bulgariaPhoneCode);
     }
     */
@@ -109,25 +106,22 @@ class ProgressContactUsPageTests
         string productDropdownValue = "Chef – DevOps";
         string lastNameFiledValue = "TestLastName";
         string businessEmailFieldValue = "test@progress.com";
-        string companyFIeldValue = "TestCompany";
+        string companyFieldValue = "TestCompany";
         string iAmDropdownValue = "Independent Software Vendor";
         string countryDropdownValue = "United Kingdom";
         string phoneFieldValue = "123456789";
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        ProgressContactUsPage.SelectValueProductDropDown(productDropdownValue);
-        ProgressContactUsPage.PopulateBusinesEmail(businessEmailFieldValue);
-        ProgressContactUsPage.PopulateLastName(lastNameFiledValue);
-        ProgressContactUsPage.PopulateCompanyName(companyFIeldValue);
-        ProgressContactUsPage.SelectValueIAmDropDown(iAmDropdownValue);
-        ProgressContactUsPage.SelectValueCountryDropDown(countryDropdownValue);
-        ProgressContactUsPage.PopulatePhone(phoneFieldValue);
+        contactUsPage.SelectValueProductDropDown(productDropdownValue);
+        contactUsPage.PopulateBusinesEmail(businessEmailFieldValue);
+        contactUsPage.PopulateLastName(lastNameFiledValue);
+        contactUsPage.PopulateCompanyName(companyFieldValue);
+        contactUsPage.SelectValueIAmDropDown(iAmDropdownValue);
+        contactUsPage.SelectValueCountryDropDown(countryDropdownValue);
+        contactUsPage.PopulatePhone(phoneFieldValue);
         // First Name field must be empty on submit.
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsFirstNameFieldEmpty());
-        ProgressContactUsPage.ClikContactSalesButton();
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsDisplayedValidationMessageFirstNameField);
+        ClassicAssert.IsTrue(contactUsPage.IsFirstNameFieldEmpty());
+        contactUsPage.ClikContactSalesButton();
+        ClassicAssert.IsTrue(contactUsPage.IsDisplayedValidationMessageFirstNameField);
     }
     
     [Test]
@@ -135,45 +129,40 @@ class ProgressContactUsPageTests
     {
         string expectedValidationMessage = "Invalid email format";
         string invalidEmailFormat = "test.progress@com";
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        ClassicAssert.IsTrue(ProgressContactUsPage.IsBusinessEmailFIledEmpty());
-        ProgressContactUsPage.PopulateBusinesEmail(invalidEmailFormat);
-        ProgressContactUsPage.ClikContactSalesButton();
-        string currentValidationMessageText = ProgressContactUsPage.TakeValueValidationMessageEmailFied();
+        ClassicAssert.IsTrue(contactUsPage.IsBusinessEmailFIledEmpty());
+        contactUsPage.PopulateBusinesEmail(invalidEmailFormat);
+        contactUsPage.ClikContactSalesButton();
+        string currentValidationMessageText = contactUsPage.TakeValueValidationMessageEmailFied();
         ClassicAssert.AreEqual(expectedValidationMessage, currentValidationMessageText, "Validation message string does not match");
     } 
 
     [Test]
-    public void Test_ConfirmationPageDisplayedOnSuccessfullSubmitionGetInTouchForm()
+    public void Test_ConfirmationPageDisplayedOnSuccessfullSubmitGetInTouchForm()
     {
         string thankYouPageURL = "https://www.progress.com/company/contact-thank-you";
         string productDropdownValue = "Chef – DevOps";
-        string firstNamefieldValue = "TestFirstName";
+        string firstNameFieldValue = "TestFirstName";
         string lastNameFiledValue = "TestLastName";
         string businessEmailFieldValue = "test@progress.com";
-        string companyFIeldValue = "TestCompany";
+        string companyFieldValue = "TestCompany";
         string iAmDropdownValue = "Independent Software Vendor";
         string countryDropdownValue = "Germany";
         string phoneFieldValue = "123456789";
-        var ProgressContactUsPage = new ProgressContactUsPage(driver);
-        var ProgressThankYouPage = new ProgressThankYouPage(driver);
+        var ThankYouPage = new ProgressThankYouPage(driver);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
-        ProgressContactUsPage.SelectValueProductDropDown(productDropdownValue);
-        ProgressContactUsPage.PopulateBusinesEmail(businessEmailFieldValue);
-        ProgressContactUsPage.PopulateFirstName(firstNamefieldValue);
-        ProgressContactUsPage.PopulateLastName(lastNameFiledValue);
-        ProgressContactUsPage.PopulateCompanyName(companyFIeldValue);
-        ProgressContactUsPage.SelectValueIAmDropDown(iAmDropdownValue);
-        ProgressContactUsPage.SelectValueCountryDropDown(countryDropdownValue);
-        ProgressContactUsPage.PopulatePhone(phoneFieldValue);
-        ProgressContactUsPage.ClikContactSalesButton();
-        wait.Until(driver => ProgressThankYouPage.IsDisplayedConfirmationMessage);
+        contactUsPage.SelectValueProductDropDown(productDropdownValue);
+        contactUsPage.PopulateBusinesEmail(businessEmailFieldValue);
+        contactUsPage.PopulateFirstName(firstNameFieldValue);
+        contactUsPage.PopulateLastName(lastNameFiledValue);
+        contactUsPage.PopulateCompanyName(companyFieldValue);
+        contactUsPage.SelectValueIAmDropDown(iAmDropdownValue);
+        contactUsPage.SelectValueCountryDropDown(countryDropdownValue);
+        contactUsPage.PopulatePhone(phoneFieldValue);
+        contactUsPage.ClikContactSalesButton();
+        wait.Until(driver => ThankYouPage.IsDisplayedConfirmationMessage);
         string reidrectedPageURL = driver.Url;
         ClassicAssert.AreEqual(thankYouPageURL, reidrectedPageURL, "The page URL does not match");
     }
@@ -183,28 +172,10 @@ class ProgressContactUsPageTests
     {
         int defaultCounterNumber = 2000;
         int stringLength = 15;
-        var stringGenerator = new ProgressGenerateRandomString();
-        var progressContactUsPage = new ProgressContactUsPage(driver);
         string randomString = stringGenerator.GenerateRandomString(stringLength);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-        progressContactUsPage.PopulateMessage(randomString);
-        int currentCounterValue = Int32.Parse(progressContactUsPage.TakeValueMessageFieldCounter());
+        contactUsPage.PopulateMessage(randomString);
+        int currentCounterValue = Int32.Parse(contactUsPage.TakeValueMessageFieldCounter());
         ClassicAssert.AreEqual(defaultCounterNumber-stringLength, currentCounterValue);
-    }
-
-    [TearDown]
-    public void EndTest()
-    {
-        ProgressTakeScreenShot screenShotHelper = new ProgressTakeScreenShot(driver);
-        var currentContext = NUnit.Framework.TestContext.CurrentContext;
-        if (currentContext.Result.Outcome != NUnit.Framework.Interfaces.ResultState.Success)
-        {
-            string testName = currentContext.Test.Name;
-            screenShotHelper.TakeScreenshot(testName);
-        }
-
-        driver.Quit();
     }
 }

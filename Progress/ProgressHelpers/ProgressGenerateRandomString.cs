@@ -2,7 +2,7 @@ using System.Text;
 
 public class ProgressGenerateRandomString
 {
-        private string chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$% ";
+        private readonly string chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$% ";
         private StringBuilder output = new StringBuilder();
         private Random random = new Random();
 
@@ -18,7 +18,7 @@ public class ProgressGenerateRandomString
             output.Append(chars[random.Next(chars.Length)]);
         }
 
-        string randomstring = output.ToString();
-        return randomstring;
+        string randomString = output.ToString();
+        return randomString;
     }
 }

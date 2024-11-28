@@ -2,7 +2,7 @@ using OpenQA.Selenium;
 
 internal class ProgressThankYouPage(IWebDriver driver) : ProgressBasePage(driver)
 {
-    private IWebElement confirmationMessage => _driver.FindElement(By.XPath("//*[@id='Content_C055_Col00']/h1"));
+    private IWebElement ConfirmationMessage => _driver.FindElement(By.XPath("//*[@id='Content_C055_Col00']/h1"));
 
     public override void LoadPage(string url)
     {
@@ -16,12 +16,12 @@ internal class ProgressThankYouPage(IWebDriver driver) : ProgressBasePage(driver
     }
 
     // List of bool objects about page elements.
-    public bool IsDisplayedConfirmationMessage => confirmationMessage.Displayed;
+    public bool IsDisplayedConfirmationMessage => ConfirmationMessage.Displayed;
 
     // Methods to return the value form an element.
     public string TakeValueConfirmationMessage()
     {
-        string confirmMessafe = confirmationMessage.Text;
-        return confirmMessafe;
+        string confirmMessage = ConfirmationMessage.Text;
+        return confirmMessage;
     }
 }

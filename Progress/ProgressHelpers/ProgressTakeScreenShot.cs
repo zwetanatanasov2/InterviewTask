@@ -21,8 +21,8 @@ internal class ProgressTakeScreenShot
                 }
                 Screenshot image = ((ITakesScreenshot)driver).GetScreenshot();
                 string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-                string filename = Path.Combine(screenShotsDirectory, $"{testCaseName}_{timestamp}.png");
-                image.SaveAsFile(filename);
+                string fileName = Path.Combine(screenShotsDirectory, $"{testCaseName}_{timestamp}.png");
+                image.SaveAsFile(fileName);
             }
             catch (Exception ex)
             {
