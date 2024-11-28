@@ -3,8 +3,6 @@ using System.Text;
 public class ProgressGenerateRandomString
 {
         private readonly string chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$% ";
-        private StringBuilder output = new StringBuilder();
-        private Random random = new Random();
 
     public string GenerateRandomString(int stringLength)
     {
@@ -12,6 +10,9 @@ public class ProgressGenerateRandomString
         {
             throw new ArgumentOutOfRangeException(nameof(stringLength), "String length must be non-negative.");
         }
+
+        StringBuilder output = new StringBuilder();
+        Random random = new Random();
 
         for (int i = 0; i < stringLength; i++)
         {

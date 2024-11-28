@@ -49,7 +49,7 @@ class ProgressContactUsPageTests
     [Test]
     public void Test_ProductDropdownDefaultValueDisplayedOnOpen()
     {
-        // Default Value Product Dropdown = "Select product";
+        // Default Value for Product drop down = "Select product";
         ClassicAssert.IsTrue(contactUsPage.IsProductInterestDropDownEmpty());
     }
 
@@ -86,19 +86,19 @@ class ProgressContactUsPageTests
         ClassicAssert.AreEqual(privacyPolicyURL, currentPageURL, "Page URL does not match.");
     }
 
-    /* I cannot compleate this test. I'm not able to find the prepopulated value after select of a country.
     [Test]
     public void Test_PhoneFieldPrepopulatedWhenSelectCountry()
     {
         string countryToSelect = "Bulgaria";
-        string bulgariaPhoneCode = "+359";
+        // There is a space after the phone codes
+        string bulgariaPhoneCode = "+359 ";
 
         ClassicAssert.IsTrue(contactUsPage.IsPhoneFieldEmpty());
         contactUsPage.SelectValueCountryDropDown(countryToSelect);
         string prepopulatePhoneCode = contactUsPage.TakeValuePhoneField();
         ClassicAssert.AreEqual(prepopulatePhoneCode, bulgariaPhoneCode);
     }
-    */
+    
 
     [Test]
     public void Test_FirstNameFieldIsRequered()
@@ -133,7 +133,7 @@ class ProgressContactUsPageTests
         ClassicAssert.IsTrue(contactUsPage.IsBusinessEmailFIledEmpty());
         contactUsPage.PopulateBusinesEmail(invalidEmailFormat);
         contactUsPage.ClikContactSalesButton();
-        string currentValidationMessageText = contactUsPage.TakeValueValidationMessageEmailFied();
+        string currentValidationMessageText = contactUsPage.TakeValidationMessageEmailFiedText();
         ClassicAssert.AreEqual(expectedValidationMessage, currentValidationMessageText, "Validation message string does not match");
     } 
 
@@ -177,5 +177,18 @@ class ProgressContactUsPageTests
         contactUsPage.PopulateMessage(randomString);
         int currentCounterValue = Int32.Parse(contactUsPage.TakeValueMessageFieldCounter());
         ClassicAssert.AreEqual(defaultCounterNumber-stringLength, currentCounterValue);
+    }
+
+    [Test]
+    public void Test_ValidateFirstNameTrimmedToMaximumAlloed()
+    {
+        int firstNameMaximumAllowedChar = 50;
+        int stringLength = 60;
+        string randomString = stringGenerator.GenerateRandomString(stringLength);
+
+        contactUsPage.PopulateFirstName(randomString);
+        string currentFirstNameValue = contactUsPage.TakeValueFirstNameField();
+        int countFirstNameValue = currentFirstNameValue.Count();
+        ClassicAssert.AreEqual(firstNameMaximumAllowedChar, countFirstNameValue);
     }
 }

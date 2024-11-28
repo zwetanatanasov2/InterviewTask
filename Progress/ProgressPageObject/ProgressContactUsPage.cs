@@ -4,6 +4,26 @@ using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 internal class ProgressContactUsPage : ProgressBasePage
 {
+    private WebDriverWait _wait;
+    private IJavaScriptExecutor _js;
+     
+    public ProgressContactUsPage(IWebDriver driver) : base(driver)
+    {
+        _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        _js = (IJavaScriptExecutor)driver;
+    }
+
+    public override void LoadPage(string url)
+    {
+        base.LoadPage(url);
+        _driver.Manage().Window.Maximize();
+    }
+
+    public override void Close()
+    {
+        base.Close();
+    }
+
     //List with locators for some of the page elements
     private IWebElement PageTitle => _driver.FindElement(By.XPath("//*[@id='Content_T9E42D5B1001_Col00']//span[text()='Contact Us']"));
     private IWebElement GetInTouchSection => _driver.FindElement(By.Id("form--1"));
@@ -27,24 +47,6 @@ internal class ProgressContactUsPage : ProgressBasePage
     private IWebElement ValidationMessageFirstNameField => _driver.FindElement(By.XPath("//*[@id='C024_Col00']/div/p"));
     private IWebElement ValidationMessageEmailField => _driver.FindElement(By.XPath("//*[@id='C023_Col01']/div/p"));
     private IWebElement CounterMessageFiled => _driver.FindElement(By.XPath("//*[@id='C026_Col01']/div/div/div/span[2]"));
-
-    private WebDriverWait _wait;
-     
-    public ProgressContactUsPage(IWebDriver driver) : base(driver)
-    {
-        _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-    }
-
-    public override void LoadPage(string url)
-    {
-        base.LoadPage(url);
-        _driver.Manage().Window.Maximize();
-    }
-
-    public override void Close()
-    {
-        base.Close();
-    }
 
     // List of bool objects about page elements.
     public bool IsDisplayedContactUsPage => PageTitle.Displayed;
@@ -234,6 +236,7 @@ internal class ProgressContactUsPage : ProgressBasePage
             throw new ArgumentException("message is null or empty.");
         }
     }
+    
     // Methods to select an option from a drop down by value.
     public void SelectValueProductDropDown(string option)
     {
@@ -268,7 +271,9 @@ internal class ProgressContactUsPage : ProgressBasePage
     // Methods to check the fields are empty and dropdown have default value.
     public bool IsFieldEmpty(IWebElement field)
     {
-        return string.IsNullOrEmpty(field.GetAttribute("value"));
+        var fieldElement = _wait.Until(ExpectedConditions.ElementToBeClickable(field));
+        string fieldValue = (string)_js.ExecuteScript("return arguments[0].value;", fieldElement);
+        return string.IsNullOrEmpty(fieldValue);
     }
 
     public bool IsFirstNameFieldEmpty()
@@ -323,25 +328,25 @@ internal class ProgressContactUsPage : ProgressBasePage
     public string TakeValueFirstNameField()
     {
         var firstNameField = _wait.Until(ExpectedConditions.ElementToBeClickable(FirstNameField));
-        string firstNameFieldValue = firstNameField.Text;
+        string firstNameFieldValue = (string)_js.ExecuteScript("return arguments[0].value;", firstNameField);
         return firstNameFieldValue;
     }
 
     public string TakeValueLastNameField()
     {
         var lastNameField = _wait.Until(ExpectedConditions.ElementToBeClickable(LastNameField));
-        string lastNameFieldValue = lastNameField.Text;
+        string lastNameFieldValue = (string)_js.ExecuteScript("return arguments[0].value;", lastNameField);
         return lastNameFieldValue;
     }
 
     public string TakeValuePhoneField()
     {
         var phoneField = _wait.Until(ExpectedConditions.ElementToBeClickable(PhoneField));
-        string phoneFieldValue = phoneField.Text;
+        string phoneFieldValue = (string)_js.ExecuteScript("return arguments[0].value;", phoneField);
         return phoneFieldValue;
     }
 
-    public string TakeValueValidationMessageEmailFied()
+    public string TakeValidationMessageEmailFiedText()
     {
         var validationMessageEmailField = _wait.Until(ExpectedConditions.ElementToBeClickable(ValidationMessageEmailField));
         string validationMessageText = validationMessageEmailField.Text;
